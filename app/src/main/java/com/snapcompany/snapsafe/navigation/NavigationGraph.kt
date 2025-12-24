@@ -46,8 +46,6 @@ fun NavigationGraph(
     val navController = rememberNavController()
     val views = Views()
 
-
-
     NavHost(
         navController = navController,
         startDestination = views.control,

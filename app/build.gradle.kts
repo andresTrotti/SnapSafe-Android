@@ -4,7 +4,7 @@ plugins {
     id("com.google.gms.google-services")
 
     id("com.google.devtools.ksp")
-    id("org.jetbrains.kotlin.plugin.compose") version "2.2.0" // this version matches your Kotlin version
+    id("org.jetbrains.kotlin.plugin.compose") version "2.2.20" // this version matches your Kotlin version
     // settings.gradle.kts
 
    // id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0" // Use the latest version
@@ -16,13 +16,13 @@ plugins {
 
 android {
     namespace = "com.snapcompany.snapsafe"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.snapcompany.snapsafe"
         minSdk = 26
         targetSdk = 35
-        versionCode = 5
+        versionCode = 6
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"

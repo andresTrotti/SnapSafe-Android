@@ -365,6 +365,47 @@ class Firestore(val userEmail: String) {
             }
 
     }
+    fun checkGateDataExists(gateId: String, callback: (Boolean) -> Unit){
+        db.collection("Devices")
+            .document(gateId)
+            .get()
+            .addOnSuccessListener {
+                val gateData = it.data?.get("gateData") as? Map<*, *>
+                if(gateData != null) callback(true)
+                else callback(false)
+                Log.d("Firestore", "Gate data exists: ${gateData != null}")
+            }
+            .addOnFailureListener {
+                callback(false)
+            }
+    }
+
+    fun uploadGateData(gateData: GateData, callback: (Boolean) -> Unit){
+
+        val gateDataMap = mapOf("gateData" to mapOf(
+            "gateId" to gateData.gateId,
+            "mac" to gateData.mac,
+            "password" to gateData.password,
+            "pPassword" to gateData.pPassword,
+            "characteristic" to gateData.characteristic,
+            "characteristicRx" to gateData.characteristicRx,
+            "service" to gateData.service,
+            "gateType" to gateData.gateType,
+            "gateName" to gateData.gateName,
+            "uploadedBy" to userEmail,
+            )
+        )
+
+        db.collection("Devices")
+            .document(gateData.gateId)
+            .set(gateDataMap, SetOptions.merge())
+            .addOnSuccessListener {
+                callback(true)
+            }
+            .addOnFailureListener {
+                callback(false)
+            }
+    }
 
     fun sendInvitationExtension(newGateUser: GateUser, gateData: GateData, message: String, callback: (Boolean, String) -> Unit){
 
@@ -374,15 +415,16 @@ class Firestore(val userEmail: String) {
         * 3 - En la ultima direccion habran los datos de restricciones y habilitacion del usuario etc o el gateUser
         * 4 - Si la invitacion es aceptada se descargan los datos del porton junto con los datos de restricciones del usuario
         * 5 - Si la invitacion es rechazada se elimina el gateUser del gateId y se elimina la invitacion del usuario
+        * 6 - Verificar si existe la gateData en la base de datos
+        * 7 - Si no existe se crea en la base de datos
         */
         val userData = userDataDb
 
         val invitationMap =
-            mapOf("invitation" to
-                    mapOf( userData?.email
+            mapOf("Invitation" to
+                    mapOf( gateData.gateId
                             to mapOf(
                                     "gateId" to gateData.gateId,
-                                    "email" to newGateUser.email,
                                     "fromName" to userData?.name,
                                     "fromEmail" to userData?.email,
                                     "message" to message
@@ -390,13 +432,23 @@ class Firestore(val userEmail: String) {
                     )
             )
 
+
         if ( userData != null ){
+
+
+            if(gateData.admin == "true") {
+                Log.d("Firestore", "Gate data does not exist for this ID: ${gateData.gateId}")
+                uploadGateData(gateData) {
+                    if (it) Log.d("Firestore", "Gate data uploaded for this ID: ${gateData.gateId}")
+                    else Log.e("Firestore", "Error uploading gate data for this ID: ${gateData.gateId}")
+                }
+            }
+
+
             db.collection("Users")
                 .document(newGateUser.email)
                 .set(invitationMap, SetOptions.merge())
                 .addOnSuccessListener {
-
-
                     db.collection("Devices/${gateData.gateId}/GateUser")
                         .document(newGateUser.email)
                         .set(

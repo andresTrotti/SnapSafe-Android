@@ -221,13 +221,13 @@ class ControlModel(
     val bleScanner: BluetoothLeScanner?,
     val userIsLogged: Boolean,
     val userEmail: String = "",
-    gateImagesListAppDb: MutableList<Uri?>
-) : ViewModel() {
+    val gateImagesListAppDb: MutableList<Uri?>
+) : ViewModel()  {
 
 
 
-    private val _uiState = MutableStateFlow(ControlUiState())
-    val uiState: StateFlow<ControlUiState> = _uiState.asStateFlow()
+        private val _uiState = MutableStateFlow(ControlUiState())
+        val uiState: StateFlow<ControlUiState> = _uiState.asStateFlow()
 
     lateinit var firestore: Firestore
 
@@ -331,7 +331,7 @@ class ControlModel(
 
         val gateData = currentGateData
 
-        val plainText = gateData.gateId + " " + gateData.mac + " " + gateData.password + " " + gateData.service + " " + gateData.characteristic + " " + gateData.characteristicRx + " " + gateData.gateType + " " + "false" + " " + gateData.pPassword + " " + gateData.version + " " + gateData.shareable + " " + gateData.allowHistory + " " + gateData.allowManageAccess + " " + gateData.allowGateConfig + " " + gateData.gateName + " " + gateData.accessFrom + " " + gateData.admin
+        val plainText = gateData.gateId + " " + gateData.mac + " " + gateData.password + " " + gateData.service + " " + gateData.characteristic + " " + gateData.characteristicRx + " " + gateData.gateType + " " + gateData.independent + " " + gateData.pPassword + " " + gateData.version + " " + gateData.shareable + " " + gateData.allowHistory + " " + gateData.allowManageAccess + " " + gateData.allowGateConfig + " " + gateData.gateName + " " + gateData.accessFrom + " " + gateData.admin
         Log.d(tag, "plainText: $plainText")
         Log.d(tag, "iv: $iv")
         Log.d(tag, "secretKey: $secretKey")

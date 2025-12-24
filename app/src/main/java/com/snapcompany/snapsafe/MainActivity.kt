@@ -159,20 +159,22 @@ class MainActivity : ComponentActivity() {
 
             job.join()
 
+            val controlModel = ControlModel(
+                context = context,
+                userEmail = userEmailLogged ?: "",
+                appDatabase = appDatabase,
+                bluetoothAdapter = bluetoothAdapter,
+                bleScanner = bleScanner,
+                gateListFromAppDb = gateList,
+                userIsLogged = userIsLogged,
+                gateImagesListAppDb = gateImagesList
+            )
+
             setContent {
 
                 SnapSafeTheme {
                     NavigationGraph(
-                        controlModel = ControlModel(
-                            context = context,
-                            userEmail = userEmailLogged ?: "",
-                            appDatabase = appDatabase,
-                            bluetoothAdapter = bluetoothAdapter,
-                            bleScanner = bleScanner,
-                            gateListFromAppDb = gateList,
-                            userIsLogged = userIsLogged,
-                            gateImagesListAppDb = gateImagesList
-                        )
+                        controlModel = controlModel
                     ).run {
                         keepSplashScreen = false
                     }
