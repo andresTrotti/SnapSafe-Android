@@ -36,7 +36,7 @@ import kotlinx.coroutines.launch
 val REQUEST_BLUETOOTH_CONNECT = 2
 
 const val casa = "mi casa"
-
+const val  hola = " oal"
 
 class MainActivity : ComponentActivity() {
 
